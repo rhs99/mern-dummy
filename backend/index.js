@@ -4,17 +4,17 @@ const accountRouter = require('./src/base-router')
 
 
 const app = express();
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
-app.use(accountRouter)
+app.use(accountRouter);
 
 mongoose.connect('mongodb://mongo:27017/my-db',
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }
-)
+);
 
 const PORT = 3050;
 app.listen(PORT, ()=>{

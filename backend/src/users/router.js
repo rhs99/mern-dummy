@@ -26,7 +26,7 @@ router.get('/list', async (req, res) => {
     } catch (error) {
         req.status(500).send();
     }
-})
+});
 
 router.patch('/update/:id', async (req, res) => {
     try {
@@ -50,7 +50,7 @@ router.patch('/update/:id', async (req, res) => {
     } catch (error) {
         res.status(400).send();
     }
-})
+});
 
 
 router.patch('/delete/:id', async (req, res) => {
@@ -71,7 +71,7 @@ router.patch('/delete/:id', async (req, res) => {
     } catch (error) {
         res.status(400).send();
     }
-})
+});
 
 
-module.exports = router
+module.exports = router;
