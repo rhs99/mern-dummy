@@ -8,7 +8,6 @@ router.post('/create', async (req, res) => {
     console.log('here');
     try {
         const user = new User(req.body);
-        console.log(user)
         await user.save();
         res.status(201).send();
     } catch (error) {
@@ -30,9 +29,7 @@ router.get('/list', async (req, res) => {
 
 router.patch('/update/:id', async (req, res) => {
     try {
-        const user = await User.findById({
-            _id: req.params.id
-        });
+        const user = await User.findById(req.params.id);
 
         if(!user){
             throw new Error('User not found!');
@@ -55,9 +52,7 @@ router.patch('/update/:id', async (req, res) => {
 
 router.patch('/delete/:id', async (req, res) => {
     try {
-        const user = await User.findById({
-            _id: req.params.id
-        });
+        const user = await User.findById(req.params.id);
 
         if(!user){
             throw new Error('User not found!');
