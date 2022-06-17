@@ -1,5 +1,18 @@
 version: "3.1"
 services:
+  frontend:
+    build: frontend
+    restart: always
+    container_name: my-frontend
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3000:3000
+    networks:
+      - react-express
+    depends_on:
+      - backend
   backend:
     container_name: my-backend
     restart: always
@@ -11,6 +24,7 @@ services:
       - mongo
     networks:
       - express-mongo
+      - react-express
     ports:
       - 3050:3050
   mongo:
@@ -24,4 +38,5 @@ services:
       - 27017:27017
 networks:
   express-mongo:
+  react-express:
   

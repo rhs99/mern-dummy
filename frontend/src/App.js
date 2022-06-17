@@ -144,7 +144,6 @@ export default class App extends React.Component{
   }
 
 
- 
   render(){
     return (
       <div className="app-container">
@@ -215,9 +214,6 @@ export default class App extends React.Component{
             </tbody>
           </table>
         </form>
-       
-
-         
       </div>
     );
   }
