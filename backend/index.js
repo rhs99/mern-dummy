@@ -1,11 +1,13 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const accountRouter = require('./src/base-router')
+const cors = require('cors')
 
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cors());
 
 app.use(accountRouter);
 
