@@ -1,7 +1,6 @@
 import React, {Fragment} from "react";
-import {nanoid} from 'nanoid';
+import axios from 'axios';
 import "./App.css";
-import data from "./mock-data.json";
 import ReadOnlyRow from "./components/read-only-row";
 import UpdatableRow from "./components/updatable-row";
 
@@ -27,8 +26,16 @@ export default class App extends React.Component{
       email: '',
       mobile: '',
       updateID: null,
-      users: data
+      users: []
     }
+  }
+
+  componentDidMount(){
+    axios.get('http://localhost:3050/user/list')
+    .then(response => this.setState({users: response.data}))
+    .catch(error=>{
+      console.log(error)
+    })
   }
 
   onChangeFirstname(e) {
@@ -67,7 +74,7 @@ export default class App extends React.Component{
 
     this.setState({
       ...formValue,
-      updateID: user.id
+      updateID: user._id
     })
   }
   
@@ -79,46 +86,61 @@ export default class App extends React.Component{
 
 
   handleDeleteClick(id){
-    const newUsers = [...this.state.users];
-    const index = newUsers.findIndex((user) => user.id === id);
-    newUsers.splice(index, 1);
-    this.setState({
-      users: newUsers
-    })
+    console.log('deleting..' + id)
+    axios.patch('http://localhost:3050/user/delete/' + id)
+    .then(res => {
+      axios.get('http://localhost:3050/user/list')
+      .then(response => this.setState({
+        users: response.data
+      }))
+      .catch(error=>{
+        console.log(error)
+      })
+    });
   }
 
   handleCreateSubmit(event){
     event.preventDefault();
     const user = {
-      id: nanoid(),
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       email: this.state.email,
       mobile: this.state.mobile
     }
 
-    this.setState((prev) => ({
-      users: [...prev.users, user]
-    }));
+    axios.post('http://localhost:3050/user/create', user)
+    .then(res => {
+      axios.get('http://localhost:3050/user/list')
+      .then(response => this.setState({users: response.data}))
+      .catch(error=>{
+        console.log(error)
+      })
+    });
+
+    
   }
 
   handleUpdateSubmit(event){
     event.preventDefault();
     const user = {
-      id: this.state.updateID,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       email: this.state.email,
       mobile: this.state.mobile
     } 
-    const newUsers = [...this.state.users];
-    const index = newUsers.findIndex((user) => user.id === this.state.updateID);
-    newUsers[index] = user;
 
-    this.setState({
-      updateID: null,
-      users: newUsers
-    })
+    axios.patch('http://localhost:3050/user/update/' + this.state.updateID, user)
+    .then(res => {
+      axios.get('http://localhost:3050/user/list')
+      .then(response => this.setState({
+        users: response.data,
+        updateID: null
+
+      }))
+      .catch(error=>{
+        console.log(error)
+      })
+    });
   }
 
 
@@ -126,39 +148,6 @@ export default class App extends React.Component{
   render(){
     return (
       <div className="app-container">
-        <form onSubmit={this.handleUpdateSubmit}>
-          <table>
-            <thead>
-              <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Mobile</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                this.state.users.map((user) => (
-                  <Fragment>
-                    {this.state.updateID === user.id ? (
-                      <UpdatableRow prevData={this.state} 
-                        onChangeFirstname={this.onChangeFirstname}
-                        onChangeLastname={this.onChangeLastname}
-                        onChangeEmail={this.onChangeEmail}
-                        onChangeMobile={this.onChangeMobile}
-                        handleCancelClick={this.handleCancelClick}
-                        key={user.id}/>
-                    ) : (
-                      <ReadOnlyRow user={user} handleUpdateClick={this.handleUpdateClick} handleDeleteClick={this.handleDeleteClick} key={user.id} />
-                    )}
-                  </Fragment>
-                ))
-              }
-            </tbody>
-          </table>
-        </form>
-       
         <h2>Add a new user</h2>
         <form onSubmit={this.handleCreateSubmit}>
           <input 
@@ -192,6 +181,41 @@ export default class App extends React.Component{
           <button type="submit">Add</button>
         </form>
 
+        <h2>All users informations</h2>
+
+        <form onSubmit={this.handleUpdateSubmit}>
+          <table>
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                this.state.users.map((user) => (
+                  <Fragment>
+                    {this.state.updateID === user._id ? (
+                      <UpdatableRow prevData={this.state} 
+                        onChangeFirstname={this.onChangeFirstname}
+                        onChangeLastname={this.onChangeLastname}
+                        onChangeEmail={this.onChangeEmail}
+                        onChangeMobile={this.onChangeMobile}
+                        handleCancelClick={this.handleCancelClick}
+                        key={user._id}/>
+                    ) : (
+                      <ReadOnlyRow user={user} handleUpdateClick={this.handleUpdateClick} handleDeleteClick={this.handleDeleteClick} key={user._id} />
+                    )}
+                  </Fragment>
+                ))
+              }
+            </tbody>
+          </table>
+        </form>
+       
 
          
       </div>
