@@ -10,7 +10,7 @@ export default class UpdatableRow extends React.Component{
                         required="required"
                         placeholder="Enter your first name"
                         name="firstName"
-                        value={this.props.prevData.firstName}
+                        value={this.props.curVal.firstName}
                         onChange={this.props.onChangeFirstname}
                     ></input>
                 </td>
@@ -21,7 +21,7 @@ export default class UpdatableRow extends React.Component{
                         required="required"
                         placeholder="Enter your last name"
                         name="lastName"
-                        value={this.props.prevData.lastName}
+                        value={this.props.curVal.lastName}
                         onChange={this.props.onChangeLastname}
                     ></input>
                 </td>
@@ -32,7 +32,7 @@ export default class UpdatableRow extends React.Component{
                         required="required"
                         placeholder="Enter your email"
                         name="email"
-                        value={this.props.prevData.email}
+                        value={this.props.curVal.email}
                         onChange={this.props.onChangeEmail}
                     ></input>
                 </td>
@@ -43,7 +43,7 @@ export default class UpdatableRow extends React.Component{
                         required="required"
                         placeholder="Enter your mobile"
                         name="mobile"
-                        value={this.props.prevData.mobile}
+                        value={this.props.curVal.mobile}
                         onChange={this.props.onChangeMobile}
                     ></input>
                 </td>
