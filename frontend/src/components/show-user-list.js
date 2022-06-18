@@ -4,7 +4,6 @@ import UpdatableRow from "./updatable-row";
 import ReadOnlyRow from "./read-only-row";
 
 export default class ShowUserList extends React.Component{
-
     constructor(props){
         super(props);
 
@@ -24,18 +23,8 @@ export default class ShowUserList extends React.Component{
             email: '',
             mobile: '',
             updateID: null,
-            users: []
         }
     }
-
-    componentDidMount(){
-        axios.get('http://localhost:3050/user/list')
-        .then(response => this.setState({users: response.data}))
-        .catch(error=>{
-          console.log(error)
-        })
-    }
-
 
     
     onChangeFirstname(e) {
@@ -87,15 +76,8 @@ export default class ShowUserList extends React.Component{
     
     handleDeleteClick(id){
         axios.patch('http://localhost:3050/user/delete/' + id)
-        .then(res => {
-        axios.get('http://localhost:3050/user/list')
-        .then(response => this.setState({
-            users: response.data
-        }))
-        .catch(error=>{
-            console.log(error)
-        })
-        });
+        .then(res => this.props.updateUserList())
+        .catch(error => console.log(error))
     }
 
     handleUpdateSubmit(event){
@@ -109,16 +91,11 @@ export default class ShowUserList extends React.Component{
     
         axios.patch('http://localhost:3050/user/update/' + this.state.updateID, user)
         .then(res => {
-          axios.get('http://localhost:3050/user/list')
-          .then(response => this.setState({
-            users: response.data,
-            updateID: null
-    
-          }))
-          .catch(error=>{
-            console.log(error)
-          })
-        });
+            this.props.updateUserList()
+            this.setState({updateID: null})
+
+        })
+        .catch(error=> console.log(error))
     }
 
     render(){
@@ -136,8 +113,8 @@ export default class ShowUserList extends React.Component{
                     </thead>
                     <tbody>
                     {
-                        this.state.users.map((user) => (
-                        <Fragment>
+                        this.props.users.map((user) => (
+                        <Fragment key={user._id}>
                             {this.state.updateID === user._id ? (
                             <UpdatableRow
                                 curVal={this.state} 
@@ -146,9 +123,9 @@ export default class ShowUserList extends React.Component{
                                 onChangeEmail={this.onChangeEmail}
                                 onChangeMobile={this.onChangeMobile}
                                 handleCancelClick={this.handleCancelClick}
-                                key={user._id}/>
+                                />
                             ) : (
-                            <ReadOnlyRow user={user} handleUpdateClick={this.handleUpdateClick} handleDeleteClick={this.handleDeleteClick} key={user._id} />
+                            <ReadOnlyRow user={user} handleUpdateClick={this.handleUpdateClick} handleDeleteClick={this.handleDeleteClick}/>
                             )}
                         </Fragment>
                         ))

@@ -55,8 +55,9 @@ export default class CreateUser extends React.Component{
         }
     
         axios.post('http://localhost:3050/user/create', user)
-        .then(res => console.log(res))
+        .then(res => this.props.updateUserList())
         .catch(error => console.log(error));  
+
     }
 
     render(){
