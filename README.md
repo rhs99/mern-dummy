@@ -12,4 +12,4 @@ Use the following command to run the application
 docker-compose up -d
 ```
 
-And then visit [http://localhost:3000/] to access the app.
+And then visit [(http://localhost:3000/)] to access the app.
