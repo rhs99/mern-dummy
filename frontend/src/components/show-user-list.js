@@ -30,25 +30,25 @@ export default class ShowUserList extends React.Component{
     onChangeFirstname(e) {
         this.setState({
           firstName: e.target.value
-        })
+        });
     }
     
     onChangeLastname(e) {
         this.setState({
             lastName: e.target.value
-        })
+        });
     }
     
     onChangeEmail(e) {
         this.setState({
             email: e.target.value
-        })
+        });
     }
     
     onChangeMobile(e) {
         this.setState({
             mobile: e.target.value
-        })
+        });
     }
 
     handleUpdateClick(event, user){
@@ -64,13 +64,13 @@ export default class ShowUserList extends React.Component{
         this.setState({
           ...formValue,
           updateID: user._id
-        })
+        });
     }
       
     handleCancelClick(){
         this.setState({
             updateID: null
-        })
+        });
     }
     
     
@@ -91,24 +91,25 @@ export default class ShowUserList extends React.Component{
     
         axios.patch('http://localhost:3050/user/update/' + this.state.updateID, user)
         .then(res => {
-            this.props.updateUserList()
             this.setState({updateID: null})
-
+            this.props.updateUserList()
         })
         .catch(error=> console.log(error))
     }
 
     render(){
+        const columns = ['First Name', 'Last Name', 'Email', 'Mobile', 'Actions'];
+
         return (
             <form onSubmit={this.handleUpdateSubmit}>
                 <table>
                     <thead>
                     <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Mobile</th>
-                        <th>Actions</th>
+                        {columns.map((column) => (
+                            <th key={column}>
+                                {column}
+                            </th>
+                        ))}
                     </tr>
                     </thead>
                     <tbody>
